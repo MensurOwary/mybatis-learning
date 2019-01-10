@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.owary.mybatisexamples.mapper.SuperpowerMapper" >
+
+    <resultMap id="resultSuperpower" type="com.owary.mybatisexamples.model.Superpower">
+        <result property="id" column="superpower_id"/>
+        <result property="superpower" column="superpower_name"/>
+    </resultMap>
+
+    <sql id="Base_Power_Cols">
+		id superpower_id, superpower superpower_name
+	</sql>
+
+    <select id="getAll" resultMap="resultSuperpower">
+        SELECT <include refid="Base_Power_Cols"/> FROM Superpower;
+    </select>
+
+    <!--here #{id}, the name 'id' comes from the actual parameter name
+        Stackoverflow:
+            In MyBatis 3, you can use @Param annotation in your mapper class(interface) method:
+
+            public getSequenceIdByOrderNumber(  @Param("seqId") int sequenceId,
+                                                @Param("orderId") int orderNo);
+            Then you can use #{seqId}, #{orderId} in the SQL without using parameterType attribute.
+    -->
+
+    <select id="get" parameterType="java.lang.Long" resultMap="resultSuperpower">
+        SELECT <include refid="Base_Power_Cols"/> FROM Superpower WHERE superpower_id = #{id};
+    </select>
+
+    <insert id="insert" parameterType="com.owary.mybatisexamples.model.Superpower" >
+       INSERT INTO Superpower (superpower) VALUES (#{superpower});
+    </insert>
+
+    <update id="update" parameterType="com.owary.mybatisexamples.model.Superpower">
+        UPDATE Superpower SET
+          superpower = #{superpower}
+        WHERE id = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--The reason behind is to write shorter names for classes-->
+    <typeAliases>
+        <typeAlias alias="Integer" type="java.lang.Integer" />
+        <typeAlias alias="Long" type="java.lang.Long" />
+        <typeAlias alias="Country" type="com.owary.mybatisexamples.model.Country" />
+        <typeAlias alias="Superhero" type="com.owary.mybatisexamples.model.Superhero" />
+        <typeAlias alias="Superpower" type="com.owary.mybatisexamples.model.Superpower" />
+        <typeAlias alias="Alias" type="com.owary.mybatisexamples.model.Alias" />
+        <typeAlias alias="City" type="com.owary.mybatisexamples.model.City" />
+        <typeAlias alias="Team" type="com.owary.mybatisexamples.model.Team" />
+    </typeAliases>
+
+    <mappers>
+        <package name="com.owary.mybatisexamples.mapper"/>
+    </mappers>
+
+</configuration>

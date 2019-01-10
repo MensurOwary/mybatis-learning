@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.owary.mybatisexamples.mapper.AliasMapper" >
+
+    <resultMap id="resultAlias" type="com.owary.mybatisexamples.model.Alias">
+        <result property="id" column="alias_id" javaType="java.lang.Long"/>
+        <result property="name" column="alias_name" javaType="java.lang.String"/>
+    </resultMap>
+
+    <sql id="Base_Alias_Cols">
+		id alias_id, name alias_name
+	</sql>
+
+    <insert id="insert" parameterType="com.owary.mybatisexamples.model.Alias">
+        INSERT INTO Alias(name) VALUES (#{name});
+    </insert>
+
+    <select id="get" parameterType="java.lang.Long" resultMap="resultAlias">
+        SELECT <include refid="Base_Alias_Cols"/> FROM Alias
+        WHERE id = #{id}
+    </select>
+
+    <select id="getAll" resultMap="resultAlias">
+        SELECT <include refid="Base_Alias_Cols"/> FROM Alias
+    </select>
+
+    <update id="update" parameterType="com.owary.mybatisexamples.model.Alias">
+        UPDATE Alias
+        SET
+          name = #{name}
+        WHERE
+          id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE FROM Alias
+        WHERE id = #{id}
+    </delete>
+
+</mapper>

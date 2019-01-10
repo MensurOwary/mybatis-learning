@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.owary.mybatisexamples.mapper.TeamMapper" >
+
+    <resultMap id="resultTeam" type="com.owary.mybatisexamples.model.Team">
+        <result property="id" column="team_id" javaType="java.lang.Long"/>
+        <result property="name" column="team_name" javaType="java.lang.String"/>
+        <result property="country" column="team_country" javaType="com.owary.mybatisexamples.model.Country"
+                typeHandler="com.owary.mybatisexamples.handler.CountryHandler"/>
+    </resultMap>
+
+    <sql id="Base_Team_Cols">
+		id team_id, name team_name, country team_country
+	</sql>
+
+    <select id="getAll" resultMap="resultTeam">
+        SELECT <include refid="Base_Team_Cols"/> FROM Team
+    </select>
+
+    <select id="get" resultMap="resultTeam" parameterType="java.lang.Long">
+        SELECT <include refid="Base_Team_Cols"/> FROM Team
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.owary.mybatisexamples.model.Team">
+        INSERT INTO Team(name, country) VALUES (#{name}, #{country})
+    </insert>
+
+    <update id="update" parameterType="com.owary.mybatisexamples.model.Team">
+        UPDATE Team
+        SET
+          name = #{name},
+          country = #{country}
+        WHERE id = #{id}
+    </update>
+
+</mapper>

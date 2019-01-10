@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.owary.mybatisexamples.mapper.SuperheroMapper" >
+
+    <resultMap id="resultSuperhero" type="Superhero">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="height" column="height"/>
+        <result property="weight" column="weight"/>
+        <association property="city" javaType="City" resultMap="com.owary.mybatisexamples.mapper.CityMapper.resultCity"/>
+        <collection property="superpowers" resultMap="com.owary.mybatisexamples.mapper.SuperpowerMapper.resultSuperpower" />
+        <collection property="teams" resultMap="com.owary.mybatisexamples.mapper.TeamMapper.resultTeam" />
+        <collection property="aliases" resultMap="com.owary.mybatisexamples.mapper.AliasMapper.resultAlias" />
+    </resultMap>
+
+    <sql id="Base_Superhero_List">
+        Superhero.id,
+        Superhero.name,
+        Superhero.height,
+        Superhero.weight,
+        City.id as city_id,
+        City.name as city_name,
+        City.country as city_country,
+        Alias.id as alias_id,
+        Alias.name as alias_name,
+        Superpower.id as superpower_id,
+        Superpower.superpower as superpower_name,
+        Team.id as team_id,
+        Team.name as team_name,
+        Team.country as team_country
+    </sql>
+
+    <insert id="insert" parameterType="Superhero" >
+        <selectKey keyProperty="id" resultType="Long" order="BEFORE">
+            SELECT NEXTVAL('superhero_id_seq') id;
+        </selectKey>
+
+        INSERT INTO Superhero (id, name,height,weight,city_id)
+        VALUES (#{id}, #{name}, #{height}, #{weight}, #{city.id});
+
+        INSERT INTO SuperheroSuperpower (superhero_id, superpower_id) VALUES
+        <foreach item="power" collection="superpowers" separator=",">
+            (#{id}, #{power.id})
+        </foreach>;
+
+        INSERT INTO SuperheroTeam (superhero_id, team_id) VALUES
+        <foreach item="team" collection="teams" separator=",">
+            (#{id}, #{team.id})
+        </foreach>;
+
+        INSERT INTO SuperheroAlias (superhero_id, alias_id) VALUES
+        <foreach item="alias" collection="aliases" separator=",">
+            (#{id}, #{alias.id})
+        </foreach>;
+    </insert>
+
+    <select id="get" parameterType="Long" resultMap="resultSuperhero">
+        SELECT
+            <include refid="Base_Superhero_List"/>
+        FROM Superhero
+        JOIN City 						    ON City.id = Superhero.city_id
+        LEFT OUTER JOIN SuperheroAlias 		ON SuperheroAlias.superhero_id = Superhero.id
+        LEFT OUTER JOIN Alias 				ON Alias.id = SuperheroAlias.alias_id
+        LEFT OUTER JOIN SuperheroSuperpower ON SuperheroSuperpower.superhero_id = Superhero.id
+        LEFT OUTER JOIN Superpower 			ON Superpower.id = SuperheroSuperpower.superpower_id
+        LEFT OUTER JOIN SuperheroTeam 		ON SuperheroTeam.superhero_id = Superhero.id
+        LEFT OUTER JOIN Team 				ON Team.id = SuperheroTeam.team_id
+        WHERE Superhero.id = #{id}
+    </select>
+
+    <select id="getAll" parameterType="Long" resultMap="resultSuperhero">
+        SELECT
+          <include refid="Base_Superhero_List"/>
+        FROM Superhero
+        JOIN City 						    ON City.id = Superhero.city_id
+        LEFT OUTER JOIN SuperheroAlias 		ON SuperheroAlias.superhero_id = Superhero.id
+        LEFT OUTER JOIN Alias 				ON Alias.id = SuperheroAlias.alias_id
+        LEFT OUTER JOIN SuperheroSuperpower ON SuperheroSuperpower.superhero_id = Superhero.id
+        LEFT OUTER JOIN Superpower 			ON Superpower.id = SuperheroSuperpower.superpower_id
+        LEFT OUTER JOIN SuperheroTeam 		ON SuperheroTeam.superhero_id = Superhero.id
+        LEFT OUTER JOIN Team 				ON Team.id = SuperheroTeam.team_id
+    </select>
+
+
+</mapper>
